@@ -2,5 +2,6 @@
 class Computer
   def initialize(game)
     @game = game
+    @guess = []
   end
 end

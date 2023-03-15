@@ -24,5 +24,14 @@ module MasterMind
         Good luck!! You'll need it... The computer is good!
       INTRO
     end
+
+    # This function will check that user input is valid
+    def valid_selection?(selection)
+      KEYS.include?(selection.downcase)
+    end
+
+    def test
+      @human.player_guess
+    end
   end
 end
