@@ -3,7 +3,7 @@ class Computer
   def initialize(game)
     @game = game
     @guess = []
-    @secret_code = ["red", "blue", "blue", "test"]
+    @secret_code = []
   end
   attr_accessor :guess, :secret_code
 

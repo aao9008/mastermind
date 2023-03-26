@@ -28,7 +28,7 @@ class Game
 
   # This function will check that user input is valid
   def valid_selection?(selection)
-    KEYS.include?(selection.downcase)
+    @KEYS.include?(selection.downcase)
   end
 
   # Take the guess array from the guesser and the secret code array from the creator
@@ -60,23 +60,63 @@ class Game
       answer = gets.chomp.downcase
     end
     if answer == 'guess'
-      player_guess_round
+      player_guess_game
     else
       player_code_round
     end
   end
 
   # This function handles all logic for a game where the user is the code-breaker
-  def player_guess_round
+  def player_guess_game
+    # Computer will generate a secret code
     secret = %w[red blue green pink]
+
+    # Play round of mastermind
+    player_guess_round(secret)
   end
 
+  def player_guess_round(secret, round = 12)
+    return if game_over(round)
+
+    puts "You have #{round} guesses left"
+    # Get guess from the code breaker
+    guess = human.player_guess
+
+    # End game if player has broken the code
+    return if cpu_code_guessed(guess, secret)
+
+    # Calculate any matches or partials
+    matches = full_match(guess, secret)
+    partials = partial_match(guess, secret, matches)
+    # Display matches and partials
+    puts "Matches: #{matches}", "Partials: #{partials}"
+
+    # Decrement round count and clear guess
+    puts round -= 1
+    human.clear_guess
+    # Play next round
+    player_guess_round(secret, round)
+  end
+
+  def cpu_code_guessed(guess, secret)
+    if guess == secret
+      puts "You guessed the code!"
+      return true
+    end
+
+    false
+  end
+
+  def game_over(round)
+    if round == 0
+      puts "You have no guesses left! Game over!"
+      return true
+    end
+
+    false
+  end
 
   def test
-    guess_or_create
-    secret = %w[red blue green pink]
-    guess = human.guess
-    matches = full_match(guess, secret)
-    partial_match(guess, secret, matches)
+    player_guess_game
   end
 end

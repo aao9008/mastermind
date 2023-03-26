@@ -9,7 +9,7 @@ class Human
   end
   attr_accessor :guess, :secret_code
 
-  def guess
+  def player_guess
     puts 'Enter your code guess, color by color by pressing enter between each one.'
     puts 'Choose from the following: Red, orange, yellow, green, blue and pink'
 
