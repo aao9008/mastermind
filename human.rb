@@ -5,9 +5,11 @@ class Human
   def initialize(game)
     @game = game
     @guess = []
+    @secret_code = []
   end
+  attr_accessor :guess, :secret_code
 
-  def player_guess
+  def guess
     puts 'Enter your code guess, color by color by pressing enter between each one.'
     puts 'Choose from the following: Red, orange, yellow, green, blue and pink'
 
@@ -25,5 +27,10 @@ class Human
     end
 
     puts "Your guess is #{@guess}"
+    return @guess
+  end
+
+  def clear_guess
+    @guess = []
   end
 end

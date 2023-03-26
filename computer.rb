@@ -3,8 +3,9 @@ class Computer
   def initialize(game)
     @game = game
     @guess = []
-    @secret_code = []
+    @secret_code = ["red", "blue", "blue", "test"]
   end
+  attr_accessor :guess, :secret_code
 
   def generate_code
     4.times do 
