@@ -62,15 +62,17 @@ class Game
     if answer == 'guess'
       player_guess_game
     else
-      player_code_round
+      player_code_game
     end
   end
 
   # This function handles all logic for a game where the user is the code-breaker
   def player_guess_game
     # Computer will generate a secret code
-    secret = %w[red blue green pink]
+    secret = cpu.generate_code
 
+    puts "\n", "LETS GET READY TO RUMMMMMMBLE!", "\n"
+    
     # Play round of mastermind
     player_guess_round(secret)
   end
@@ -89,10 +91,10 @@ class Game
     matches = full_match(guess, secret)
     partials = partial_match(guess, secret, matches)
     # Display matches and partials
-    puts "Matches: #{matches}", "Partials: #{partials}"
+    puts "Matches: #{matches}", "Partials: #{partials}","\n"
 
     # Decrement round count and clear guess
-    puts round -= 1
+    round -= 1
     human.clear_guess
     # Play next round
     player_guess_round(secret, round)
@@ -101,6 +103,15 @@ class Game
   def cpu_code_guessed(guess, secret)
     if guess == secret
       puts "You guessed the code!"
+      return true
+    end
+
+    false
+  end
+
+  def player_code_guessed(guess, secret)
+    if guess == secret
+      puts "The T-1000 guessed the code! THE MACHINES HAVE WON"
       return true
     end
 
@@ -116,7 +127,65 @@ class Game
     false
   end
 
-  def test
-    player_guess_game
+  # This section contains functions for game where computer is the code breaker
+
+  def player_code_game
+    # User will select a secret code
+    secret = human.player_secret_code
+
+    #Computer generates all possible code combos
+    cpu.generate_all_possible_codes
+
+    # Computer plays 12 rounds of mastermind
+    computer_guess_round(secret)
+    
+  end
+
+  def computer_guess_round(secret, round = 12)
+    return if game_over(round)
+
+    puts "The T-1000 has #{round} guesses left"
+    # Computer selects guess from guess pool
+    guess = cpu.pick_random_guess
+
+    puts "The T-1000 guessed #{guess}"
+
+    return if human_code_guessed(guess, secret)
+
+    # Calculate any matches or partials
+    matches = full_match(guess, secret)
+    partials = partial_match(guess, secret, matches)
+
+    # Display matches and partials
+    puts "Matches: #{matches}", "Partials: #{partials}","\n"
+
+    puts "Thinking....", "\n"
+
+    sleep(3) # Puase code execution 
+
+    cpu.update_guess_pool(partials, matches, guess)
+
+    # Decrement round count and clear guess
+    round -= 1
+    cpu.clear_guess
+    # Play next round
+    computer_guess_round(secret, round)
+  end 
+
+  def human_code_guessed(guess, secret)
+    if guess == secret
+      puts "The T-1000 guessed the code!","THE MACHINES HAVE WON!"
+      return true
+    end
+
+    false
+  end 
+
+  def game_won(round)
+    if round == 0
+      puts "The T-100 has no guesses left! Humans have won!"
+      return true
+    end
+    false
   end
 end
